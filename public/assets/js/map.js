@@ -1,6 +1,6 @@
 //Gets Air Quality Index and Coordinates
 document.addEventListener("getAQI", printAQI, false);
-document.addEventListener("getAQI", printchart, false);
+
 
 //This sets map formatting and recenters map to new area once searched. It applies nighttime styling.
 let map;
@@ -63,8 +63,8 @@ let badpollution = [
 
 //The below is to place coordinates for the searched location and apply the headmap.
 function printAQI(event) {
-  initMap(event.detail.aqi.latitude, event.detail.aqi.longitude);
-  for (let i = 0; i < 6; i++) {
+    initMap(event.detail.aqi.latitude, event.detail.aqi.longitude);
+
     const heatmapData = [];
     let pollutioncircle = [];
     let rating = [];
@@ -79,19 +79,19 @@ function printAQI(event) {
     } else if (event.detail.aqi.aqi <= 70) {
       rating = "Unhealthy";
       pin = "#D9760D";
-      chartcolor = "#B18742";
+      chartcolor = "#FDFF30";
       pollutioncircle = mediumpollution;
     } else {
-      rating = "Hazerdous";
+      rating = "Hazardous";
       pollutioncircle = badpollution;
       pin = "#7A3E77";
-      chartcolor = "#8F5E8D"
+      chartcolor = "#F40CA4"
     }
     const text =
-            "AQI: " +
-            event.detail.aqi.aqi +
-            " Rating: " + rating
-            pollutioncircle;
+      "AQI: " +
+      event.detail.aqi.aqi +
+      " Rating: " + rating
+    pollutioncircle;
     const latLng = new google.maps.LatLng(
       event.detail.aqi.latitude,
       event.detail.aqi.longitude
@@ -107,8 +107,8 @@ function printAQI(event) {
     gmarkers.push(marker);
     marker.addListener(
       "click",
-      (function(marker, text) {
-        return function(e) {
+      (function (marker, text) {
+        return function (e) {
           infowindow.setContent(text);
           infowindow.open(map, marker);
         };
@@ -121,22 +121,11 @@ function printAQI(event) {
       map: map,
       gradient: pollutioncircle,
       radius: 0.03,
-      opacity: 0.09,
       zoom: 12
     });
-    console.log(chartcolor)
+    printchart(aqi,chartcolor);
   }
-
-  printchart(aqi.value);
-
-
-}
-
-
-
-function printchart() {
-    console.log(aqi.value  );
-    document.getElementsByTagName('thing')[0].setAttribute("style", "--percentage : " + aqi.value + "; --fill: #8F5E8D");
-
-
-}
+  function printchart(aqi,color) {
+    document.getElementsByTagName('donut')[0].setAttribute("style", "color:" + color +  "; text-shadow: 3px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000; --percentage : " + aqi.value + "; --fill: " + color + "" +  "");
+    document.getElementById("AQIresults").innerHTML = aqi
+  }

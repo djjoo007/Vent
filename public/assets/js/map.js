@@ -1,9 +1,14 @@
 //Gets Air Quality Index and Coordinates
 document.addEventListener("getAQI", printAQI, false);
+document.addEventListener("getAQI", printchart, false);
 
 //This sets map formatting and recenters map to new area once searched. It applies nighttime styling.
 let map;
 let infowindow;
+
+var aqchart = document.getElementById("aqchart");
+
+
 function initMap(lat = 47.6062, lon = -122.3321) {
   map = new google.maps.Map(document.getElementById("map"), {
     center: new google.maps.LatLng(lat, lon),
@@ -63,19 +68,24 @@ function printAQI(event) {
     const heatmapData = [];
     let pollutioncircle = [];
     let rating = [];
+    let chartcolor = [];
     let pin = [];
+    let aqi = event.detail.aqi.aqi
     if (event.detail.aqi.aqi <= 40) {
       rating = "Good";
       pollutioncircle = goodpollution;
       pin = "#1AC8DB";
+      chartcolor = "#3CB4FC";
     } else if (event.detail.aqi.aqi <= 70) {
       rating = "Unhealthy";
       pin = "#D9760D";
+      chartcolor = "#B18742";
       pollutioncircle = mediumpollution;
     } else {
       rating = "Hazerdous";
       pollutioncircle = badpollution;
       pin = "#7A3E77";
+      chartcolor = "#8F5E8D"
     }
     const text =
             "AQI: " +
@@ -105,7 +115,7 @@ function printAQI(event) {
       })(marker, text)
     );
     heatmapData.push(latLng);
-    const heatmap = new google.maps.visualization.HeatmapLayer({
+    let heatmap = new google.maps.visualization.HeatmapLayer({
       data: heatmapData,
       dissipating: false,
       map: map,
@@ -114,5 +124,19 @@ function printAQI(event) {
       opacity: 0.09,
       zoom: 12
     });
+    console.log(chartcolor)
   }
+
+  printchart(aqi.value);
+
+
+}
+
+
+
+function printchart() {
+    console.log(aqi.value  );
+    document.getElementsByTagName('thing')[0].setAttribute("style", "--percentage : " + aqi.value + "; --fill: #8F5E8D");
+
+
 }

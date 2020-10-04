@@ -1,6 +1,7 @@
 // Set up Dependencies
 const express = require('express');
 const fs = require('fs/promises');
+require('dotenv').config();
 
 // Set up the Express App
 const app = express();
